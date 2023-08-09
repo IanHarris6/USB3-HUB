@@ -1,0 +1,141 @@
+USB HUB notes
+
+Inspiration: https://www.youtube.com/watch?v=iR2hYpq0KI0&t=1251s&ab_channel=Phil%E2%80%99sLab
+
+Design based on:
+- USB5744 Hardware Design Checklist - https://ww1.microchip.com/downloads/en/DeviceDoc/USB5744-Hardware-Design-Checklist-00002970A.pdf
+	-FIGURE 4-2: UPSTREAM PORT TYPE-C USB CONNECTIONS
+	-FIGURE 4-4: DOWNSTREAM PORT TYPE-A USB CONNECTIONS
+
+4.0 USB Signals--Note:
+1.Can switch +/- D pairs over i2c registers
+2.Usb3.0 has automatic polarity detection
+
+INFINEON-AN70707 - https://www.infineon.com/dgdl/Infineon-AN70707_EZ-USB_FX3_FX3S_SX3_hardware_design_guidelines_and_schematic_checklist-ApplicationNotes-v18_00-EN.pdf?fileId=8ac78c8c7cdc391c017d0739793e5dfd
+12.1 USB 3.0 SuperSpeed design guidelines 
+-"The polarity can be swapped on the USB 3.0 differential pairs. Polarity detection is done automatically by
+the USB 3.0 PHY during link training, as defined in the USB3.0 specification section 6.4.2, and does not
+require any additional changes to device firmware. Given the different USB connectors pinouts, the polarity
+inversion mechanism can be used to ensure that USB traces do not cross each other." 
+
+USB3 specification 6.4.2
+- "the Receiver shall use the D10.2 Symbol within the TSEQ
+Ordered Set to determine lane polarity inversion"
+
+INFINEON-AN70707 12.1
+-"AC coupling capacitors should have a cut-out in the shape of these capacitors on the immediate solid GND
+layer to reduce reflection on the super speed signals."... confirm this somewhere else... is this a cut out of the GND layer underneath? just the pad... or entire capacitor size?
+
+autodesk article - https://www.autodesk.com/products/fusion-360/blog/what-is-usb-3-0-high-speed-routing-guidelines/
+	-"In the USB 3.0, the TX and RX etch lengths do not have to match"
+	-confirmed by this stack exhange post as well ->https://electronics.stackexchange.com/questions/401539/usb-3-0-length-matching-in-pcb-layout
+
+
+- Microchips AN2051 - 2.0 UPSTREAM FACING PORT SWITCHED IMPLEMENTATION - https://ww1.microchip.com/downloads/en/Appnotes/00002051A.pdf
+	- Figure 6
+
+Hardware Design checklist 9.4 Self Powered/Bus Powered settings
+Self-Powered vs Bus-Powered:
+	-Design currently uses barrel jack to power 5744 IC - self-powered
+	-If 5744 is powered through a usb connector - bus-powered
+From https://www.edn.com/usb-3-1-implementation-of-usb-type-c/:
+USB-C can "eliminate power barrel jack connector from new platforms."
+
+
+
+USB 2.0 D+ D- on type-C receptacle can be shorted together (will create a stub).
+From Texas Instruments A Primer on USB Type-C® and USB
+Power Delivery Applications and
+Requirements - "Although it’s not required, some designers elect to
+include a USB 2.0 mux in their system to improve signal
+integrity."
+
+https://ecsxtal.com/crystal-and-oscillator-printed-circuit-board-design-considerations/
+Crystal and oscillator printed circuit board design considerations - "Do not lay out the GND pattern under crystal unit"
+
+
+Finding required track width and spacing with JLC3313 stack up
+
+JLC3313 stack up:
+
+Top Layer1 		Copper 	0.035 mm 	
+Prepreg 		3313*1 	0.0994 mm	epsilonr = 4.05
+Inner Layer2 	Copper 	0.0152 mm
+Core 			FR4 		1.265 mm	epsilonr = 4.6
+Inner Layer3 	Copper 	0.0152 mm
+Prepreg 		3313*1 	0.0994 mm 	epsilonr = 4.05
+Bottom Layer4 	Copper 	0.035 mm
+
+KiCad calculator results (JLC calculator is confusing). 3/14/23
+	Transmission Line type: 
+		Coupled microstip line
+	
+	Substrate parameters:
+		epsilonr = 4.05	(dielectric constant)
+		tan(δ) = 0.02	* (also knows as loss cofactor or loss tangent)
+		ρ = 1.72e-08	(electric resistivity for copper)
+		H = 0.0994mm	(height of dielectric beneath signal)
+		H_t = 1e+20		(height between signal and ground plane above; using 1000mm to represent infinity because our signals are routed on the top layer)
+		T = 0.035		(copper thiccness)
+		roughness = 0	(roughness of surface not necessary)
+		μ = 1			(relative permiability of conductor not neccessary)
+
+	Physical parameters:
+		W = 0.175mm (width)
+		S = 0.09mm (Spacing) -->minumum for JLCPCB
+	
+	Results:
+		Differential Impedance = 90ohms	--> 90 ohms required to match USB's cable impedance
+
+
+*Could not find on JLCPCB's website
+*Google: The Tan δ of most PCB materials ranges from 0.02 for most commonly used materials to 0.001 for very low-loss high-end materials -->https://www.protoexpress.com/blog/pcb-substrates-knowing-dielectric-materials-properties/
+
+
+4 Copper layers:
+
+signal
+---
+GND
+---
+PWR
+---
+signal
+
+Picking stackup that keeps GND closest to signal routing layer with differential pairs to create the shortest distance for E-Field to travel-->Helps signal integrity
+
+Minumun trace width and spacing = 0.09mm (4-6 Layer boards):
+https://jlcpcb.com/capabilities/pcb-capabilities
+
+Power switching regulator (MIC2099-1YMT-TR):
+Using DC barrel jack so USB5744 is "self-powered"
+Switched on from port control (USB5744) -->Enable pin (MIC2099-1YMT-TR), then downstream ports are powered through barrel jack
+current limit resistor from Ilimit pin--> GND, sets current limit at Vout. Detailed in "Setting Ilimit" section of data sheet --> https://www.mouser.com/datasheet/2/268/mic2095-1076850.pdf
+Table 2-->200ohm limiting resistor, limits output current to ~1A
+
+Downstream USB ports on right edge of board currently... probably makes more sense to move them to bottom edge of the board to line up with IC pins
+
+To do:
+
+Find what vbus voltage divider... eval board uses 100k 100k.
+Create pretty silkscreen on front and back--stream--"Ian's USB HUB"--"ExclusiveElectronics"
+
+Insightful stuff 
+	|
+	|
+	V
+
+Conflicting answers explanation:
+https://electronics.stackexchange.com/questions/622930/differential-microstrip-impedance-calculators-giving-conflicting-answers
+
+Typo in stack up description:
+https://electronics.stackexchange.com/questions/506926/jlcpcb-4-layer-stackup
+
+USB 2.0 Kicad impedance calculator walkthrough:
+https://www.digikey.com/en/maker/projects/how-to-route-differential-pairs-in-kicad-for-usb/45b99011f5d34879ae1831dce1f13e93
+
+Calculating Capcitor Values for Crystal Oscillator
+https://blog.adafruit.com/2012/01/24/choosing-the-right-crystal-and-caps-for-your-design/
+
+
+
