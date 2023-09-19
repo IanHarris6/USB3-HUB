@@ -3445,6 +3445,7 @@
   (no_connect (at 168.91 299.72) (uuid 65d792e3-0b4c-4fa6-9f58-5cabdc198729))
   (no_connect (at 180.34 317.5) (uuid 7797850b-d6d5-4c41-8ca5-832b28bac798))
   (no_connect (at 468.63 240.03) (uuid a6ea5da4-a464-4c84-a8e9-41593735cc18))
+  (no_connect (at 252.73 90.17) (uuid acb847f7-4ea5-4275-9ede-d6224b99d4c5))
   (no_connect (at 204.47 303.53) (uuid c96a13e1-d13a-442d-a0f8-dfbf3afbdee2))
   (no_connect (at 298.45 93.98) (uuid cd313b93-a02b-4f16-81ff-83ff0b40efcd))
   (no_connect (at 190.5 317.5) (uuid d3df70c3-5081-4d96-84a0-9ed694f3587c))
@@ -4972,7 +4973,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 98279826-0780-44f3-bd08-0b1138dccf92)
   )
-  (text "NC pins used for straight through routing" (at 137.16 111.76 0)
+  (text "NC pins used for straight through routing" (at 138.43 128.27 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid b2968123-81e2-484d-b821-2b3750bb78d9)
   )
@@ -5877,12 +5878,12 @@
   )
 
   (symbol (lib_id "Connector:USB3_A") (at 440.69 369.57 0) (mirror y) (unit 1)
-    (in_bom yes) (on_board yes) (fields_autoplaced)
+    (in_bom yes) (on_board yes)
     (uuid 2390adb5-a63a-455f-8824-3c1cb30101f4)
-    (property "Reference" "J3" (id 0) (at 452.12 368.9349 0)
+    (property "Reference" "J3" (id 0) (at 431.8 350.52 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "483930003" (id 1) (at 452.12 371.4749 0)
+    (property "Value" "483930003" (id 1) (at 431.8 353.06 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "Connector_USB:USB3_A_Molex_48393-001" (id 2) (at 436.88 367.03 0)
@@ -7483,16 +7484,16 @@
     (property "Reference" "U2" (id 0) (at 188.595 176.53 0)
       (effects (font (size 1.524 1.524)))
     )
-    (property "Value" "UTC2000-I/MG" (id 1) (at 188.595 180.34 0)
+    (property "Value" "UTC2000/MG" (id 1) (at 188.595 180.34 0)
       (effects (font (size 1.524 1.524)))
     )
     (property "Footprint" "UTC2000:16-pinQFN3x3" (id 2) (at 189.23 179.324 0)
       (effects (font (size 1.524 1.524)) hide)
     )
-    (property "Datasheet" "https://www.digikey.com/en/products/detail/microchip-technology/UTC2000-E-MG/5803607" (id 3) (at 187.96 201.93 0)
+    (property "Datasheet" "https://www.digikey.com/en/products/detail/microchip-technology/UTC2000-MG/5639492" (id 3) (at 187.96 201.93 0)
       (effects (font (size 1.524 1.524)) hide)
     )
-    (property "MFR#" "UTC2000-E/MG" (id 4) (at 189.23 201.93 0)
+    (property "MFR#" "UTC2000/MG" (id 4) (at 189.23 201.93 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Sample" "https://www.microchipdirect.com/product/UTC2000-E/MG?samples=true&_ga=2.224301147.1756316279.1677889211-2135431936.1677350441" (id 5) (at 189.23 201.93 0)
@@ -7912,6 +7913,9 @@
     (path "/65d11ab1-9769-4cee-9541-45d052b13890/104605e6-b063-498f-b19b-08c89e07b5c8"
       (reference "#PWR0108") (unit 1) (value "GND") (footprint "")
     )
+    (path "/65d11ab1-9769-4cee-9541-45d052b13890/b137e1d8-1ac8-4ec0-af77-aaf28c133529"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
     (path "/cfa29f6b-3d51-4474-b96b-9e793512e832"
       (reference "C1") (unit 1) (value "14pF") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
@@ -8110,6 +8114,9 @@
     (path "/65d11ab1-9769-4cee-9541-45d052b13890/dc890f68-cf8d-4722-8ada-c341406c6e90"
       (reference "H4") (unit 1) (value "MountingHole_Pad") (footprint "MountingHole:MountingHole_3mm_Pad_Via")
     )
+    (path "/65d11ab1-9769-4cee-9541-45d052b13890/5975151e-2c1d-444c-8d6a-36206b6134f0"
+      (reference "H5") (unit 1) (value "MountingHole_Pad") (footprint "MountingHole:MountingHole_3mm_Pad_Via")
+    )
     (path "/35776aff-6edd-4fea-a89e-afaf56e80c57"
       (reference "J1") (unit 1) (value "12401610E4#2A") (footprint "Connector_USB:USB_C_Receptacle_Amphenol_12401610E4-2A")
     )
@@ -8210,7 +8217,7 @@
       (reference "U1") (unit 1) (value "USB5744/2G") (footprint "56VQFN:VQFN56_2G_MCH")
     )
     (path "/efcdadde-7a33-4c7a-9940-1f9195f8b5da"
-      (reference "U2") (unit 1) (value "UTC2000-I/MG") (footprint "UTC2000:16-pinQFN3x3")
+      (reference "U2") (unit 1) (value "UTC2000/MG") (footprint "UTC2000:16-pinQFN3x3")
     )
     (path "/02ee2d73-edc2-456b-9242-eed52c8cfe74"
       (reference "U3") (unit 1) (value "HD3SS6126RUAR") (footprint "HD3SS6126RUAR:QFN50P900X350X80-43N")
